@@ -1,0 +1,17 @@
+AbstractElement           AbstractShell <--> ShellType
+      |                         |
+      |                         |
+      \/                        \/
+   Element                     Shell
+       ^                        ^
+        \                      /
+         \                    /
+          \                  /
+          \/                \/
+        _________Card_________
+                |
+                | <- play 
+                |
+                \/
+            affects on Player and GameBoard/field/world
+

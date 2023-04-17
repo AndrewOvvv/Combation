@@ -7,7 +7,6 @@
 #include "card.hpp"
 
 
-
 #pragma once
 
 
@@ -16,6 +15,8 @@ namespace Game
 
 class Player {
 private:
+    using priority_effect_t = std::pair<int64_t, effect::Effect*>;
+        
     int64_t hp_{};
     std::vector<shell::Shell*> shell_deck_;
     std::vector<element::Element*> element_deck_;
@@ -23,7 +24,9 @@ private:
     std::vector<shell::Shell*> shell_hand_;
     std::vector<element::Element*> element_hand_;
 
-    std::priority_queue<int64_t, effect::Effect*> current_effects_;
+    std::priority_queue<priority_effect_t, 
+                        std::vector<priority_effect_t>,
+                        [] (auto agr1, auto arg2) { return arg1.first < arg2.first; }> current_effects_;
 
     card::Card current_card_;
 public:

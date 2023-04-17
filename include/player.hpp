@@ -17,13 +17,13 @@ namespace Game
 class Player {
 private:
     int64_t hp_{};
-    std::vector<shell::Shell> shell_deck_;
-    std::vector<element::Element> element_deck_;
+    std::vector<shell::Shell*> shell_deck_;
+    std::vector<element::Element*> element_deck_;
 
-    std::vector<shell::Shell> shell_hand_;
-    std::vector<element::Element> element_hand_;
+    std::vector<shell::Shell*> shell_hand_;
+    std::vector<element::Element*> element_hand_;
 
-    std::priority_queue<int64_t, effect::Effect> current_effects_;
+    std::priority_queue<int64_t, effect::Effect*> current_effects_;
 
     card::Card current_card_;
 public:

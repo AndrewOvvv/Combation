@@ -14,7 +14,7 @@ enum class GameState
 {
     in_process,
     finished
-};
+}; // enum class GameState
 
 class GameInstance {
 private:

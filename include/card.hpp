@@ -19,6 +19,8 @@ private:
     element::Element element_;
     // name - NAME of card (for output, debugging, domestic using and for user)
     // decription - string describes Card (especially for players)
+    // shell_ - contains card's shell 
+    // element_ - contains card's element
 public:
     std::string name() const {
         return name_;

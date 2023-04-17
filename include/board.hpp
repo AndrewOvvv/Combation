@@ -23,6 +23,7 @@ public:
         return hp_;
     } // return Board::hp_
     
+    // TODO
     void apply_effects() {} // no return value; just apply effects
 }; // class Board
 

@@ -12,7 +12,7 @@ class Element
 {
 private:
     std::string name_{};
-    std::string description_();
+    std::string description_{};
     // name - NAME of element (for output, debugging, domestic using and for user)
     // decription - string describes Element (especially for players)
 public:

@@ -9,7 +9,7 @@ namespace effect
 
 class Effect {
 private:
-    size_t duration_{};
+    int64_t duration_{};
     int64_t hp_change_{};
 
     int64_t shell_draw_change_{};
@@ -40,6 +40,12 @@ public:
     auto element_draw_change() const {
         return element_draw_change_;
     }
+
+    /// @brief change effect duration on deltha_value
+    /// @param deltha_value: value for changing
+    auto change_duration(int64_t deltha_value) {
+        duration_ += deltha_value;
+    } 
 }; // class Effect
 
 } // namespace effect

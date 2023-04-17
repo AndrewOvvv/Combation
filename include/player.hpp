@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdint.h>
 
+#include "effect.hpp"
 #include "element.hpp"
 #include "shell.hpp"
 #include "card.hpp"
@@ -19,9 +20,12 @@ private:
     using card_t = std::shared_ptr<card::Card>;
     using shell_t = std::shared_ptr<shell::Shell>;
     using element_t = std::shared_ptr<element::Element>;
-    using priority_effect_t = std::pair<int64_t, std::shared_ptr<effect::Effect>>;
+    using effect_t = std::shared_ptr<effect::Effect>;
+    using priority_effect_t = std::pair<int64_t, effect_t>;
         
     int64_t hp_{};
+    //int64_t count_shell_draw{};
+    //int64_t count_element_draw{};
     std::vector<shell_t> shell_deck_;
     std::vector<element_t> element_deck_;
 
@@ -89,7 +93,20 @@ public:
     } 
 
     /// @brief itterate over current effects of player and apply them in correct order
-    void apply_effects() const {} // no return value; apply effects to player
+    void apply_effects() {
+        auto set_iterator = current_effects_.begin();
+        for (auto set_iterator = current_effects_.begin(); set_iterator != current_effects_.end(); ++set_iterator) {
+            if ((*set_iterator).second->duration() != 0) {
+                apply_effect((*set_iterator).second);
+            }
+        }
+    }
+
+    /// @brief change hp, decrease effect's duration
+    void apply_effect(effect_t effect) {
+        change_hp(effect->hp_changing());
+        effect->change_duration(-1);
+    }
 }; // class Player
 
 } // namespace Game

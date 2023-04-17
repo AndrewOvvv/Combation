@@ -26,7 +26,7 @@ public:
         return name_;
     } // return Card::name_ 
     
-    std::string decription() const {
+    std::string description() const {
         return description_;
     } // return Card::decription_
 

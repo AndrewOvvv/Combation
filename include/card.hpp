@@ -13,7 +13,7 @@ namespace card
 class Card {
 private:
     std::string name_{};
-    std::string decription_{};
+    std::string description_{};
 
     shell::Shell shell_;
     element::Element element_;
@@ -27,7 +27,7 @@ public:
     } // return Card::name_ 
     
     std::string decription() const {
-        return decription_;
+        return description_;
     } // return Card::decription_
 
 }; // class Card

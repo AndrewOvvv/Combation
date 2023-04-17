@@ -30,19 +30,19 @@ public:
     // GETTERS
     /// @brief get name of shell 
     /// @return name of shell
-    std::string name() const {
+    auto name() const {
         return name_;
     }
 
     /// @brief get description of shell
     /// @return description of shell
-    std::string description() const {
+    auto description() const {
         return description_;
     }
 
     /// @brief get type of shell
     /// @return type of shell
-    ShellType type() const {
+    auto type() const {
         return type_;
     }
 

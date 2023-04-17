@@ -21,7 +21,7 @@ private:
     
     element_t state_;
     
-    std::vector<effect_t> current_effects_;
+    std::deque<effect_t> current_effects_;
 public:
     
     // GETTERS
@@ -46,7 +46,7 @@ public:
     
     // TODO
 
-    /// @brief itterate over current_effects and apply every effect
+    /// @brief itterate over current effects of board and apply every effect
     void apply_effects() {} // no return value; just apply effects
 }; // class Board
 

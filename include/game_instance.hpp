@@ -1,3 +1,4 @@
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -33,6 +34,8 @@ private:
 public:
     
     // state_ methods
+
+    /// @brief count alive players after change state of game
     void update_state() {
         size_t cnt_alive = 0;
         for (size_t i = 0; i < players_.size(); ++i) {
@@ -48,6 +51,8 @@ public:
         }
     }
 
+    /// @brief check if game is finished
+    /// @return true if state is finished, otherwise false
     bool is_finished() const {
         return state_ == GameState::finished;
     }

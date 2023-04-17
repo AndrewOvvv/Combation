@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "shell.hpp"
 #include "element.hpp"
@@ -13,8 +14,8 @@ namespace Game
 
 class Board {
 private:
-    using element_t = std::unique_ptr<element::Element>;
-    using effect_t = std::unique_ptr<effect::Effect>;
+    using element_t = std::shared_ptr<element::Element>;
+    using effect_t = std::shared_ptr<effect::Effect>;
     
     int64_t hp_{};
     
@@ -24,20 +25,28 @@ private:
 public:
     
     // GETTERS
+    /// @brief  get hp of board
+    /// @return hp of board
     auto hp() const {
         return hp_;
-    } // return Board::hp_
+    }
     
+    /// @brief get state of board
+    /// @return state of board
     auto state() const {
         return state_;
-    } // return Board::state_
+    }
     
     // SETTERS
-    auto state(element_t new_element) {
+    /// @brief set state of board
+    /// @param new_element: new value of state member 
+    void state(element_t new_element) {
         state_ = new_element;
-    } // no return value; set new Board::state_ value
+    }
     
     // TODO
+
+    /// @brief itterate over current_effects and apply every effect
     void apply_effects() {} // no return value; just apply effects
 }; // class Board
 

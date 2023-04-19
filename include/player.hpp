@@ -97,7 +97,9 @@ public:
         // apply effects
         int64_t usual_decrease = -1;
         for (auto set_iterator = current_effects_.begin(); set_iterator != current_effects_.end(); ++set_iterator) {
+            if ((*set_iterator).second->duration() > 0) {
                 apply_effect((*set_iterator).second, usual_decrease);
+            }
         }
 
         // find set elements for deletion

@@ -94,18 +94,30 @@ public:
 
     /// @brief itterate over current effects of player and apply them in correct order
     void apply_effects() {
-        auto set_iterator = current_effects_.begin();
+        // apply effects
+        int64_t usual_decrease = -1;
         for (auto set_iterator = current_effects_.begin(); set_iterator != current_effects_.end(); ++set_iterator) {
-            if ((*set_iterator).second->duration() != 0) {
-                apply_effect((*set_iterator).second);
+                apply_effect((*set_iterator).second, usual_decrease);
+        }
+
+        // find set elements for deletion
+        std::vector<priority_effect_t> for_deletion;
+        for (auto set_iterator = current_effects_.begin(); set_iterator != current_effects_.end(); ++set_iterator) {
+            if ((*set_iterator).second->duration() == 0) {
+                for_deletion.push_back(*set_iterator);
             }
+        }
+
+        // deletion part
+        for (const auto &element : for_deletion) {
+            current_effects_.erase(current_effects_.find(element));
         }
     }
 
-    /// @brief change hp, decrease effect's duration
-    void apply_effect(effect_t effect) {
+    /// @brief change hp, decrease effect's duration on decrease_num
+    void apply_effect(effect_t effect, int64_t decrease_num) {
         change_hp(effect->hp_changing());
-        effect->change_duration(-1);
+        effect->change_duration(decrease_num);
     }
 }; // class Player
 

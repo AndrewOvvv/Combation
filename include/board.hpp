@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <queue>
 
 #include "shell.hpp"
 #include "element.hpp"

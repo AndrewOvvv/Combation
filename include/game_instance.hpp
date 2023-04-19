@@ -13,6 +13,7 @@ namespace Game
 
 enum class GameState 
 {
+    begining,
     in_process,
     finished
 }; // enum class GameState
@@ -56,11 +57,34 @@ public:
     bool is_finished() const {
         return state_ == GameState::finished;
     }
+
+    /// @brief update state after check is game finished
+    /// @return return true if after state update game has finished state, otherwise else
+    bool check_state() {
+        update_state();
+        return is_finished();
+    }
     // state_ methods
 
 
     // main methods
-    void start() {}
+    void start() {
+        while (state_ != GameState::finished){
+            if (state_ == GameState::begining) {
+                // TODO
+            } else if (state_ == GameState::in_process) {
+                board_.apply_effects();
+                if (check_state()) {
+                    continue;
+                }
+                players_[whos_turn_].turn();
+                if (check_state()) {
+                    continue;
+                }
+                whos_turn_ = (whos_turn_ + 1) % players_.size();
+            }
+        }
+    }
 
     void start_turn() {}
 

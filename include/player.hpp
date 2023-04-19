@@ -121,6 +121,9 @@ public:
         change_hp(effect->hp_changing());
         effect->change_duration(decrease_num);
     }
+
+    /// @brief 
+    void turn() {}
 }; // class Player
 
 } // namespace Game

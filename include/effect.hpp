@@ -14,6 +14,9 @@ private:
 
     int64_t shell_draw_change_{};
     int64_t element_draw_change_{};
+
+    bool skip_turn_{false};
+    bool time_stopped_{false};
 public:
 
     // GETTERS
@@ -39,6 +42,18 @@ public:
     /// @return element draw changing value
     auto element_draw_change() const {
         return element_draw_change_;
+    }
+
+    /// @brief get skip_turn_ flag value
+    /// @return value of skipping turn flag
+    auto skip_turn() const {
+        return skip_turn_;
+    }
+
+    /// @brief get time_stopped_ flag value
+    /// @return value of time stopped flag
+    auto time_stopped() const {
+        return time_stopped_;
     }
 
     /// @brief change effect duration on deltha_value

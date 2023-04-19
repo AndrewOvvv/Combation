@@ -6,6 +6,7 @@
 #include "shell.hpp"
 #include "element.hpp"
 #include "effect.hpp"
+#include "priority_effect.hpp"
 
 #pragma once
 

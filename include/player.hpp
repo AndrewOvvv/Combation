@@ -3,10 +3,12 @@
 #include <string>
 #include <vector>
 #include <stdint.h>
+#include <algorithm>
 
 #include "effect.hpp"
-#include "element.hpp"
 #include "shell.hpp"
+#include "element.hpp"
+#include "priority_effect.hpp"
 #include "card.hpp"
 
 #pragma once
@@ -21,22 +23,21 @@ private:
     using shell_t = std::shared_ptr<shell::Shell>;
     using element_t = std::shared_ptr<element::Element>;
     using effect_t = std::shared_ptr<effect::Effect>;
-    using priority_effect_t = std::pair<int64_t, effect_t>;
+    using priority_effect_t = effect::PriorityEffect;
+    
+    const int64_t draw_value = 2; // count of drawing cards
+    const int64_t fatigue_value = 2; // damage for trying to draw a missing card
         
     int64_t hp_{};
-    //int64_t count_shell_draw{};
-    //int64_t count_element_draw{};
+    int64_t count_shell_draw{draw_value};
+    int64_t count_element_draw{draw_value};
     std::vector<shell_t> shell_deck_;
     std::vector<element_t> element_deck_;
 
     std::vector<shell_t> shell_hand_;
     std::vector<element_t> element_hand_;
 
-    bool cmp(const priority_effect_t &arg1, const priority_effect_t &arg2) { 
-        return arg1.first < arg2.first; 
-    }
-
-    std::set<priority_effect_t, decltype(cmp)> current_effects_{cmp};
+    std::set<priority_effect_t> current_effects_;
 
     card_t current_card_;
 public:
@@ -94,18 +95,48 @@ public:
 
     /// @brief itterate over current effects of player and apply them in correct order
     void apply_effects() {
+        
         // apply effects
         int64_t usual_decrease = -1;
+        int64_t additional_draw_shell_value{0}, additional_draw_element_value{0};
+        bool skip_turn = false, time_stopped = false;
+
         for (auto set_iterator = current_effects_.begin(); set_iterator != current_effects_.end(); ++set_iterator) {
-            if ((*set_iterator).second->duration() > 0) {
-                apply_effect((*set_iterator).second, usual_decrease);
+            if ((*set_iterator).effect()->duration() > 0) {
+                apply_effect((*set_iterator).effect(), usual_decrease, 
+                            additional_draw_element_value, additional_draw_shell_value,
+                            skip_turn, time_stopped);
+            }
+            if (hp_ <= 0) {
+                kill();
+            }
+            if (time_stopped) {
+                continue;
+                // TODO
+                // finish_turn();
             }
         }
+
+        // cards drawing start
+        int64_t current_element_draw = count_element_draw + additional_draw_element_value;
+        int64_t current_shell_draw = count_shell_draw + additional_draw_shell_value;
+        current_element_draw = std::max(current_element_draw, (int64_t)0);
+        current_shell_draw = std::max(current_shell_draw, (int64_t)0);
+
+        while (current_element_draw--) {
+            draw_element();
+        }
+
+        while (current_shell_draw--) {
+            draw_shell();
+        }
+        // cards draawing end
+
 
         // find set elements for deletion
         std::vector<priority_effect_t> for_deletion;
         for (auto set_iterator = current_effects_.begin(); set_iterator != current_effects_.end(); ++set_iterator) {
-            if ((*set_iterator).second->duration() == 0) {
+            if ((*set_iterator).effect()->duration() == 0) {
                 for_deletion.push_back(*set_iterator);
             }
         }
@@ -117,13 +148,52 @@ public:
     }
 
     /// @brief change hp, decrease effect's duration on decrease_num
-    void apply_effect(effect_t effect, int64_t decrease_num) {
+    void apply_effect(effect_t effect, int64_t decrease_num, 
+                        int64_t &element_add, int64_t &shell_add,
+                        bool &skip_turn, bool &time_stopped) {
         change_hp(effect->hp_changing());
+        element_add += effect->element_draw_change();
+        shell_add += effect->shell_draw_change();
+        skip_turn |= effect->skip_turn();
+        time_stopped |= effect->time_stopped();
         effect->change_duration(decrease_num);
+
+        if (!is_alive()) {
+            kill();
+        }
     }
 
     /// @brief 
     void turn() {}
+
+    void kill() {}
+
+    void draw_element() {
+        if (element_deck_.size() == 0) {
+            deal_fatigue();
+            return;
+        }
+        auto get = element_deck_.back();
+        element_deck_.pop_back();
+        element_hand_.push_back(get);
+    }
+
+    void draw_shell() {
+        if (shell_deck_.size() == 0) {
+            deal_fatigue();
+            return;
+        }
+        auto get = shell_deck_.back();
+        shell_deck_.pop_back();
+        shell_hand_.push_back(get);
+    }
+
+    void deal_fatigue() {
+        change_hp(-fatigue_value);
+        if (!is_alive()) {
+            kill();
+        }
+    }
 }; // class Player
 
 } // namespace Game

@@ -74,13 +74,9 @@ public:
                 // TODO
             } else if (state_ == GameState::in_process) {
                 board_.apply_effects();
-                if (check_state()) {
-                    continue;
-                }
+                if (check_state()) continue;
                 players_[whos_turn_].turn();
-                if (check_state()) {
-                    continue;
-                }
+                if (check_state()) continue;
                 whos_turn_ = (whos_turn_ + 1) % players_.size();
             }
         }
